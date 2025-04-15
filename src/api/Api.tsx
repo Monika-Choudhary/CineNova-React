@@ -12,3 +12,12 @@ export async function fetchCurrentMovies() {
 
   return data.results;
 }
+
+export async function fetchMovies(query: string) {
+  const response = await fetch(
+    `${BASE_URL}/search/movie?api_key=${api_key}&query=${query}`
+  );
+  const data = await response.json();
+
+  return data.results;
+}
