@@ -9,8 +9,9 @@ interface Movie {
   title: string;
   overview: string;
   poster_path: string;
-  genres:[];
-  certifications: string
+  genres: string[];
+  certification: string;
+  adult: boolean;
 }
 
 function FetchMovies() {
@@ -37,6 +38,7 @@ function FetchMovies() {
     if (!filteredMovies.trim()) {
       const movies = await fetchCurrentMovies();
       setMovies(movies);
+
       return;
     }
     setLoading(true);
@@ -71,7 +73,7 @@ function FetchMovies() {
         <button onClick={handleSearch}>Search</button>
       </div>
       <div></div>
-      <ul className="border border-red-700 p-2 gap-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6" >
+      <ul className="border border-red-700 p-2 gap-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
@@ -79,8 +81,8 @@ function FetchMovies() {
             title={movie.title}
             overview={movie.overview}
             posterPath={movie.poster_path}
-            genres={movie.genre_ids}
-            certification={movie.adult ? "18+" : "0+"} 
+            genres={movie.genres}
+            certification={movie.certification}
           />
         ))}
       </ul>
