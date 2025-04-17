@@ -3,14 +3,16 @@ interface MovieCardProps {
   title: string;
   overview: string;
   posterPath: string;
+  genres: string[];
+  certification: string;
 }
 
-function MovieCard({ id, title, overview, posterPath }: MovieCardProps) {
+function MovieCard({ id, title, genres, certification,  posterPath }: MovieCardProps) {
   return (
     <li key={id}>
       <img src={`https://image.tmdb.org/t/p/w500${posterPath}`} alt={title} />
       <h1>{title}</h1>
-      <p>{overview}</p>
+   <p>FSK:{certification || "nicht bekannnt"}</p>
     </li>
   );
 }

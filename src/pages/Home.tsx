@@ -9,6 +9,8 @@ interface Movie {
   title: string;
   overview: string;
   poster_path: string;
+  genres:[];
+  certifications: string
 }
 
 function FetchMovies() {
@@ -22,14 +24,8 @@ function FetchMovies() {
       setLoading(true);
       try {
         const movies = await fetchCurrentMovies();
-        setTimeout(() => {
-          console.log("timeout");
-
-          setMovies(movies);
-          console.log(movies.results);
-
-          setLoading(false);
-        }, 1000);
+        setMovies(movies);
+        setLoading(false);
       } catch (error) {
         setError(error as Error);
         setLoading(false);
@@ -37,49 +33,45 @@ function FetchMovies() {
     };
     fetchData();
   }, []);
-
-  // console.log("Loading state:", loading); // Log the loading state
-  // console.log("Error state:", error); // Log the error state
-  // console.log("Movies state:", movies); // Log the movies state
-
   const handleSearch = async () => {
     if (!filteredMovies.trim()) {
       const movies = await fetchCurrentMovies();
       setMovies(movies);
       return;
     }
-
     setLoading(true);
     try {
       const searchedMovies = await fetchMovies(filteredMovies);
-      setMovies(searchedMovies);
-      setLoading(false);
+      setTimeout(() => {
+        setMovies(searchedMovies);
+        setLoading(false);
+      }, 2000);
     } catch (error) {
       setError(error as Error);
       setLoading(false);
     }
   };
-const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-  if(event.key === "Enter")
-    handleSearch()
-}
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") handleSearch();
+  };
   if (loading) return <Loader />;
   if (error) return <ErrorMessage message={error.message} />;
 
   return (
-    <div>
+    <div className="">
       <h1>Popular Movies</h1>
       <div>
-      <input
-      type="text"
-      placeholder = "Search movies..."
-      value = {filteredMovies}
-      onChange={(event) => setFilteredMovies (event.target.value)} 
-      onKeyDown={handleKeyDown} // key enter
-      />
-      <button onClick={handleSearch}>Search</button>
+        <input
+          type="text"
+          placeholder="Search movies..."
+          value={filteredMovies}
+          onChange={(event) => setFilteredMovies(event.target.value)}
+          onKeyDown={handleKeyDown} // key enter
+        />
+        <button onClick={handleSearch}>Search</button>
       </div>
-      <ul>
+      <div></div>
+      <ul className="border border-red-700 p-2 gap-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6" >
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
@@ -87,6 +79,8 @@ const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
             title={movie.title}
             overview={movie.overview}
             posterPath={movie.poster_path}
+            genres={movie.genre_ids}
+            certification={movie.adult ? "18+" : "0+"} 
           />
         ))}
       </ul>
