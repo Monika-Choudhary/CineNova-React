@@ -16,7 +16,7 @@ function MovieCard({
 }: MovieCardProps) {
   return (
     <li key={id}>
-      <img src={`https://image.tmdb.org/t/p/w500${posterPath}`} alt={title} />
+      <img className="pb-3 "src={`https://image.tmdb.org/t/p/w500${posterPath}`} alt={title} />
       <h1>{title}</h1>
       <p>Genres: {genres.join(", ")}</p>
       <p>FSK:{certification || " nicht bekannt"}</p>

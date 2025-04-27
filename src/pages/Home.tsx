@@ -61,19 +61,19 @@ function FetchMovies() {
 
   return (
     <div className="">
-      <h1>Popular Movies</h1>
-      <div>
-        <input
+      <h1 className="text-4xl flex justify-center p-5">CineNova</h1>
+      <div className="p-5 flex justify-center">
+        <input className="w-1/2"
           type="text"
           placeholder="Search movies..."
           value={filteredMovies}
           onChange={(event) => setFilteredMovies(event.target.value)}
           onKeyDown={handleKeyDown} // key enter
         />
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={handleSearch} className="mx-2 px-2 rounded border-2 border-white">Search</button>
       </div>
-      <div></div>
-      <ul className="border border-red-700 p-2 gap-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+    
+      <ul className=" p-2 gap-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
