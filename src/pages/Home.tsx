@@ -1,78 +1,39 @@
-import { useEffect, useState } from "react";
-import { fetchCurrentMovies, fetchMovies } from "../api/Api";
+import {useState } from "react";
+import { useMovieContext } from "../context/MovieContext";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 import MovieCard from "../components/MovieCard";
 
-interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  poster_path: string;
-  genres: string[];
-  certification: string;
-  adult: boolean;
-}
-
 function FetchMovies() {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<null | Error>(null);
+  const {movies, loading, error, handleSearch} = useMovieContext();
   const [filteredMovies, setFilteredMovies] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const movies = await fetchCurrentMovies();
-        setMovies(movies);
-        setLoading(false);
-      } catch (error) {
-        setError(error as Error);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-  const handleSearch = async () => {
-    if (!filteredMovies.trim()) {
-      const movies = await fetchCurrentMovies();
-      setMovies(movies);
-
-      return;
-    }
-    setLoading(true);
-    try {
-      const searchedMovies = await fetchMovies(filteredMovies);
-      setTimeout(() => {
-        setMovies(searchedMovies);
-        setLoading(false);
-      }, 2000);
-    } catch (error) {
-      setError(error as Error);
-      setLoading(false);
-    }
-  };
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") handleSearch();
+    if (event.key === "Enter") handleSearch(filteredMovies);
   };
   if (loading) return <Loader />;
-  if (error) return <ErrorMessage message={error.message} />;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
-    <div className="">
+    <div>
       <h1 className="text-4xl flex justify-center p-5">CineNova</h1>
       <div className="p-5 flex justify-center">
-        <input className="w-1/2"
+        <input
+          className="w-1/2"
           type="text"
           placeholder="Search movies..."
           value={filteredMovies}
           onChange={(event) => setFilteredMovies(event.target.value)}
           onKeyDown={handleKeyDown} // key enter
         />
-        <button onClick={handleSearch} className="mx-2 px-2 rounded border-2 border-white">Search</button>
+        <button
+          onClick={() => handleSearch(filteredMovies)}
+          className="mx-2 px-2 rounded border-2 border-white"
+        >
+          Search
+        </button>
       </div>
-    
+
       <ul className=" p-2 gap-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {movies.map((movie) => (
           <MovieCard
